@@ -36,6 +36,7 @@ ORDER_DEFAULT = 0
 ORDER_TIME = 1
 order_type= ORDER_DEFAULT
 
+#MAX 100
 DEFAULT_PAGES = 50
 url = urlD
 file_name_prefix=''
@@ -45,6 +46,10 @@ def getPage(page_id):
     myweb = rq.get(url+page+str(page_id))
     content = re.findall('\"rateList\":(\[.*?\])\,\"tags\"',myweb.text.encode('utf-8'))[0]
     myjson = json.loads(content)
+    if len(myjson) ==0 :
+        print "no more data " ,page_id
+        out_file.close()
+        sys.exit()
     for item in myjson:
         #if len(item['rateContent'].encode('utf-8')) <400:
         #    continue
