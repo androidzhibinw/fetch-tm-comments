@@ -6,19 +6,31 @@ import json
 #url='http://world.tmall.com/item/44320847678.htm?'
 base_url='https://rate.tmall.com/list_detail_rate.html?'
 itemId='itemId=44320847678&spuId=327809007&sellerId=1732577545'
+# 1 is time ,3 is default
 orderByTime='&order=1'
-url='https://rate.tmall.com/list_detail_rate.htm?itemId=44320847678&spuId=327809007&sellerId=1732577545&order=3&currentPage=0&append=0&content=1'
+orderByDefault='&order=3'
+apend='&append=0'
+page='&currentPage='
+#tag not good
+tagId='&tagId=620'
+url='https://rate.tmall.com/list_detail_rate.htm?itemId=44320847678&spuId=327809007&sellerId=1732577545'
+urlbad='https://rate.tmall.com/list_detail_rate.htm?itemId=44320847678&spuId=327809007&sellerId=1732577545&order=1&append=0&content=0&tagId=620'
+urlbad2='https://rate.tmall.com/list_detail_rate.htm?itemId=44320847678&spuId=327809007&sellerId=1732577545&order=1&append=0&content=1&tagId=620&posi=-1&picture=0'
 
-myweb = rq.get(url)
 
-#print myweb.text.encode('utf-8')
-content = re.findall('\"rateList\":(\[.*?\])\,\"tags\"',myweb.text.encode('utf-8'))[0]
-myjson = json.loads(content)
-#print json.dumps(myjson,indent=4, separators=(',', ': '),ensure_ascii=False).encode('utf-8')
+def getPage(page_id):
+    myweb = rq.get(urlbad2+page+str(page_id))
 
-mytable = pd.read_json(content)
-a=mytable['rateDate']
-b=mytable['rateContent']
-print b
-#mytable.to_csv('mytable.txt')
+    #print myweb.text.encode('utf-8')
+    content = re.findall('\"rateList\":(\[.*?\])\,\"tags\"',myweb.text.encode('utf-8'))[0]
+    myjson = json.loads(content)
+    #print json.dumps(myjson,indent=4, separators=(',', ': '),ensure_ascii=False).encode('utf-8')
+    mytable = pd.read_json(content)
+    a=mytable['rateDate']
+    b=mytable['rateContent']
+    print b 
+    #mytable.to_csv('mytable.txt')
 
+
+for i in range(1,10):
+    getPage(i)
